@@ -154,7 +154,7 @@ int List_append(List* pList, void* pItem){
                 highestNode = currentFreeNode;
                 // printf("HigestNode address: %p\n", currentFreeNode);
             }else{
-                currentFreeNode = currentFreeNode->prev;
+                currentFreeNode = currentFreeNode->prevFree;
             }
         }else{
             pList->tail->next = currentFreeNode;
@@ -175,7 +175,7 @@ int List_append(List* pList, void* pItem){
                 highestNode = currentFreeNode;
                 // printf("HigestNode address: %p\n", currentFreeNode);
             }else{
-                currentFreeNode = currentFreeNode->prev;
+                currentFreeNode = currentFreeNode->prevFree;
             }
         }
         pList->numberOfItems++;
@@ -186,7 +186,44 @@ int List_append(List* pList, void* pItem){
 
 // Adds item to the front of pList, and makes the new item the current one. 
 // Returns 0 on success, -1 on failure.
-int List_prepend(List* pList, void* pItem);
+int List_prepend(List* pList, void* pItem){
+    if(numberOfListNodes == LIST_MAX_NUM_NODES){
+        return -1;
+    }else{
+        if(pList->head == NULL){
+            pList->head = currentFreeNode;
+            pList->current = currentFreeNode;
+            pList->tail = currentFreeNode;
+
+            pList->head->item = pItem;
+            pList->head->next = NULL;
+            pList->head->prev = NULL;
+
+            if(currentFreeNode == highestNode){
+                currentFreeNode = currentFreeNode + 1;
+                highestNode = currentFreeNode;
+            }else{
+                currentFreeNode = currentFreeNode->prevFree;
+            }
+        }else{
+            pList->head->prev = currentFreeNode;
+            pList->head->prev->next = pList->head;
+            pList->head = currentFreeNode;
+            pList->current = currentFreeNode;
+            pList->head->item = pItem;
+
+            if(currentFreeNode == highestNode){
+                currentFreeNode = currentFreeNode + 1;
+                highestNode = currentFreeNode;
+            }else{
+                currentFreeNode = currentFreeNode->prevFree;
+            }
+        }
+        pList->numberOfItems++;
+        numberOfListNodes++;
+        return 0;
+    }
+}
 
 // Return current item and take it out of pList. Make the next item the current one.
 // If the current pointer is before the start of the pList, or beyond the end of the pList,
@@ -207,13 +244,14 @@ void* List_trim(List* pList){
         temp->prev = NULL;
         temp->item = NULL;
 
-        currentFreeNode->next = temp;
-        currentFreeNode->next->prev = currentFreeNode;
+        currentFreeNode->nextFree = temp;
+        currentFreeNode->nextFree->prevFree = currentFreeNode;
         printf("Current of the list: %p \n", currentFreeNode);
         currentFreeNode = temp;
         printf("Current of the list: %p \n", currentFreeNode);
         // printf("Current of the list: %p \n", currentFreeNode->prev);
 
+        numberOfListNodes--;
         return temp;
     }
 }
