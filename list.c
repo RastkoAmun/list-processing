@@ -195,7 +195,28 @@ void* List_remove(List* pList);
 
 // Return last item and take it out of pList. Make the new last item the current one.
 // Return NULL if pList is initially empty.
-void* List_trim(List* pList);
+void* List_trim(List* pList){
+    if(pList->head == NULL){
+        return NULL;
+    }else{
+        Node* temp = pList->tail;
+        printf("Current address of tail: %p \n", temp);
+        void* tempItem = temp->item;
+        pList->tail = pList->tail->prev;
+        pList->tail->next = NULL;
+        temp->prev = NULL;
+        temp->item = NULL;
+
+        currentFreeNode->next = temp;
+        currentFreeNode->next->prev = currentFreeNode;
+        printf("Current of the list: %p \n", currentFreeNode);
+        currentFreeNode = temp;
+        printf("Current of the list: %p \n", currentFreeNode);
+        // printf("Current of the list: %p \n", currentFreeNode->prev);
+
+        return temp;
+    }
+}
 
 // Adds pList2 to the end of pList1. The current pointer is set to the current pointer of pList1. 
 // pList2 no longer exists after the operation; its head is available

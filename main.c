@@ -28,75 +28,101 @@ int main(){
 
     printf("List head: %p\n", list->head);
 
-    int i1 = 1;
-    int i2 = 2;
-    int i3 = 3;
-    int i4 = 4;
-    List_append(list, &i1);
-    List_append(list, &i2);
-    List_append(list, &i3);
-    List_append(list, &i4);
+    int a1 = 1;
+    int a2 = 2;
+    int a3 = 3;
+    // int a4 = 4;
+    List_append(list, &a1);
+    List_append(list, &a2);
+    List_append(list, &a3);
+    // List_append(list, &a4);
     printList(list);
 
-    int a1 = 101;
-    int a2 = 102;
-    int a3 = 103;
-    List_append(list2, &a1);
-    List_append(list2, &a2);
-    List_append(list2, &a3);
+    int b1 = 101;
+    int b2 = 102;
+    // int b3 = 103;
+    List_append(list2, &b1);
+    List_append(list2, &b2);
+    // List_append(list2, &b3);
     printList(list2);
 
-    int i5 = 5;
-    int i6 = 6;
-    List_append(list, &i5);
-    List_append(list, &i6);
+    int a5 = 5;
+    int a6 = 6;
+    List_append(list, &a5);
+    List_append(list, &a6);
     printList(list);
 
+    int c1 = 1001;
+    // int c2 = 1002;
+    // int c3 = 1003;
+    // int c4 = 1004;
+    List_append(list3, &c1);
+    // List_append(list3, &c2);
+    // List_append(list3, &c3);
+    // List_append(list3, &c4);
+    printList(list3);
 
-    printf("Number of nodes: %d \n", List_count(list));
-    printf("Number of nodes: %d \n", List_count(list2));
+    printf("Number of nodes in list 1: %d \n", List_count(list));
+    printf("Number of nodes in list 2: %d \n", List_count(list2));
+    printf("Number of nodes in list 3: %d \n", List_count(list3));
+    // void* removedItem1 = List_trim(list);
+    // void* removedItem2 = List_trim(list);
+    // printf("Removed item: %d and it's address is: %p\n", *(int*)removedItem1, removedItem1);
+    // printf("Removed item: %d and it's address is: %p\n", *(int*)removedItem2, removedItem2);
+    printf("Removed item:  and it's address is: %p\n", List_trim(list));
+    printf("Removed item:  and it's address is: %p\n", List_trim(list));
+    printf("Removed item:  and it's address is: %p\n", List_trim(list));
+    // printf("Current of the list: %p \n", );
+
+    int c2 = 1002;
+    List_append(list3, &c2);
+    printf("Tail of newly added is %p\n", List_last(list3));
+    printList(list);
+    printList(list2);
+    printList(list3);
+
 
     //Test for List_first method
-    {
-        printf("\n------- TEST FOR LIST_FIRST ----------\n");
-        printf("Current of the list: %p \n", list->current);
-        printf("Head of the list: %p \n", List_first(list));
-        printf("Beginning of the list: %p \n", list->head);
-        printf("Current of the list: %p \n", list->current);
-    }
+    // {
+    //     printf("\n------- TEST FOR LIST_FIRST ----------\n");
+    //     printf("Current of the list: %p \n", list->current);
+    //     printf("Head of the list: %p \n", List_first(list));
+    //     printf("Beginning of the list: %p \n", list->head);
+    //     printf("Current of the list: %p \n", list->current);
+    // }
 
     //Test for List_last method
-    {
-        printf("\n------- TEST FOR LIST_LAST ----------\n");
-        printf("Current of the list: %p \n", list->current);
-        printf("Tail of the list: %p \n", List_last(list));
-        printf("Ending of the list: %p \n", list->tail);
-        printf("Current of the list: %p \n", list->current);
-    }
+    // {
+    //     printf("\n------- TEST FOR LIST_LAST ----------\n");
+    //     printf("Current of the list: %p \n", list->current);
+    //     printf("Tail of the list: %p \n", List_last(list));
+    //     printf("Ending of the list: %p \n", list->tail);
+    //     printf("Current of the list: %p \n", list->current);
+    // }
 
     //Test for List_next and List_curr method
-    {
-        printf("\n------- TEST FOR LIST_NEXT and LIST_CURR----------\n");
-        printf("Head of the list: %p \n", List_first(list));
-        printf("Current of the list: %p \n", list->current);
-        printf("Current of the list: %p \n", List_curr(list));
-        printf("Next current of the list: %p \n", List_next(list));
-        printf("Next current of the list: %p \n", List_next(list));
-        printf("Next current of the list: %p \n", List_next(list));
-        printf("Next current of the list: %p \n", List_next(list));
-    }
+    // {
+    //     printf("\n------- TEST FOR LIST_NEXT and LIST_CURR----------\n");
+    //     printf("Head of the list: %p \n", List_first(list));
+    //     printf("Current of the list: %p \n", list->current);
+    //     printf("Current of the list: %p \n", List_curr(list));
+    //     printf("Next current of the list: %p \n", List_next(list));
+    //     printf("Next current of the list: %p \n", List_next(list));
+    //     printf("Next current of the list: %p \n", List_next(list));
+    //     printf("Next current of the list: %p \n", List_next(list));
+    // }
 
     //Test for List_prev and List_curr method
-    {
-        printf("\n------- TEST FOR LIST_NEXT and LIST_CURR----------\n");
-        printf("Head of the list: %p \n", List_last(list));
-        printf("Current of the list: %p \n", list->current);
-        printf("Current of the list: %p \n", List_curr(list));
-        printf("Prev current of the list: %p \n", List_prev(list));
-        printf("Prev current of the list: %p \n", List_prev(list));
-        printf("Prev current of the list: %p \n", List_prev(list));
-        printf("Prev current of the list: %p \n", List_prev(list));
-    }
+    // {
+    //     printf("\n------- TEST FOR LIST_NEXT and LIST_CURR----------\n");
+    //     printf("Head of the list: %p \n", List_last(list));
+    //     printf("Current of the list: %p \n", list->current);
+    //     printf("Current of the list: %p \n", List_curr(list));
+    //     printf("Prev current of the list: %p \n", List_prev(list));
+    //     printf("Prev current of the list: %p \n", List_prev(list));
+    //     printf("Prev current of the list: %p \n", List_prev(list));
+    //     printf("Prev current of the list: %p \n", List_prev(list));
+    // }
 
 
 
