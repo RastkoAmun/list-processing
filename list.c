@@ -55,7 +55,7 @@ void* List_first(List* pList){
         return NULL;
     }else{
         pList->current = pList->head;
-        return pList->head;
+        return pList->current;
     }
 }
 
@@ -75,7 +75,10 @@ void* List_last(List* pList){
 // If this operation advances the current item beyond the end of the pList, a NULL pointer 
 // is returned and the current item is set to be beyond end of pList.
 void* List_next(List* pList){
-    if(pList->current->next == NULL){
+    if(pList->current == (void*)LIST_OOB_END){
+        pList->current = (void*)LIST_OOB_END;
+        return NULL;
+    }else if(pList->current->next == NULL){
         pList->current = (void*)LIST_OOB_END;
         return NULL;
     }else{
@@ -88,7 +91,10 @@ void* List_next(List* pList){
 // If this operation backs up the current item beyond the start of the pList, a NULL pointer 
 // is returned and the current item is set to be before the start of pList.
 void* List_prev(List* pList){
-    if(pList->current->prev == NULL){
+    if(pList->current == (void*)LIST_OOB_START){
+        pList->current = (void*)LIST_OOB_START;
+        return NULL;
+    }else if(pList->current->prev == NULL){
         pList->current = (void*)LIST_OOB_START;
         return NULL;
     }else{
@@ -106,28 +112,75 @@ void* List_curr(List* pList){
 // If the current pointer is before the start of the pList, the item is added at the start. If 
 // the current pointer is beyond the end of the pList, the item is added at the end. 
 // Returns 0 on success, -1 on failure.
-int List_insert_after(List* pList, void* pItem);
+int List_insert_after(List* pList, void* pItem){
+    if(numberOfListNodes == LIST_MAX_NUM_NODES){
+        return -1;
+    }else{
+        if(pList->current == pList->tail){
+            return List_append(pList, pItem);
+        }else if(pList->current == (void*)LIST_OOB_END){
+            return List_append(pList, pItem);
+        }else if(pList->current == (void*)LIST_OOB_START){
+            return List_prepend(pList, pItem);
+        }else{
+            Node* temp = pList->current->next;
+            pList->current->next = currentFreeNode;
+            currentFreeNode->prev = pList->current;
+            currentFreeNode->next = temp;
+            temp->prev = currentFreeNode;
+            pList->current = currentFreeNode;
+            pList->current->item = pItem;
 
-//DUMMY
-void printList(List* pList){
-    Node* temp = pList->head;
-    while(temp != NULL){
-        printf("%d ", *(int*)(temp)->item);
-        temp = temp->next;
+            if(currentFreeNode == highestNode){
+                currentFreeNode = currentFreeNode + 1;
+                highestNode = currentFreeNode;
+            }else{
+                currentFreeNode = currentFreeNode->prevFree;
+            }
+        }
+        pList->numberOfItems++;
+        numberOfListNodes++;
+        return 0;
     }
-    printf("\n");
-    // printf("%d ", *(int*)(temp)->item);
-    // temp = temp->next;
-    // printf("%d ", *(int*)(temp)->item);
-    // temp = temp->next;
-    // printf("%d ", *(int*)(temp)->item);
 }
 
 // Adds item to pList directly before the current item, and makes the new item the current one. 
 // If the current pointer is before the start of the pList, the item is added at the start. 
 // If the current pointer is beyond the end of the pList, the item is added at the end. 
 // Returns 0 on success, -1 on failure.
-int List_insert_before(List* pList, void* pItem);
+int List_insert_before(List* pList, void* pItem){
+    if(numberOfListNodes == LIST_MAX_NUM_NODES){
+        return -1;
+    }else{
+        if(pList->current == pList->head){
+            return List_prepend(pList, pItem);
+        }else if(pList->current == (void*)LIST_OOB_END){
+            return List_append(pList, pItem);
+        }else if(pList->current == (void*)LIST_OOB_START){
+            return List_prepend(pList, pItem);
+        }else{
+            printf("I'm here\n");
+            Node* temp = pList->current->prev;
+            pList->current->prev = currentFreeNode;
+            currentFreeNode->next = pList->current;
+            currentFreeNode->prev = temp;
+            temp->next = currentFreeNode;
+            pList->current = currentFreeNode;
+            pList->current->item = pItem;
+
+            if(currentFreeNode == highestNode){
+                currentFreeNode = currentFreeNode + 1;
+                highestNode = currentFreeNode;
+            }else{
+                // currentFreeNode->prev->next = NULL;
+                currentFreeNode = currentFreeNode->prevFree;
+            }
+        } 
+        pList->numberOfItems++;
+        numberOfListNodes++;
+        return 0;    
+    }
+}
 
 // Adds item to the end of pList, and makes the new item the current one. 
 // Returns 0 on success, -1 on failure.
@@ -142,7 +195,7 @@ int List_append(List* pList, void* pItem){
 
             pList->tail->item = pItem;
 
-            // printf("%d \n", *(int*)pList->head->item);
+            printf("%d \n", *(int*)pList->head->item);
             // printf("HERE\n");
             pList->tail->next = NULL;
             pList->tail->prev = NULL;
@@ -161,11 +214,11 @@ int List_append(List* pList, void* pItem){
             // printf("Address: %p \n", pList->tail);
             // printf("Current address: %p\n", currentFreeNode);
             // printf("Next Address: %p \n", pList->tail->next);
-            pList->tail->next->prev = pList->tail;
+            currentFreeNode->prev = pList->tail;
             pList->tail = currentFreeNode;
             pList->current = currentFreeNode;
             pList->current->item = pItem;
-            // printf("Item: %d \n", *(int*)pList->tail->item);
+            printf("Item: %d \n", *(int*)pList->tail->item);
             // printf("Address: %p \n", pList->tail);
             // printf("HERE 22\n");
             if(currentFreeNode == highestNode){
@@ -282,3 +335,18 @@ void List_free(List* pList, FREE_FN pItemFreeFn);
 // the first node in the list (if any).
 typedef bool (*COMPARATOR_FN)(void* pItem, void* pComparisonArg);
 void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg);
+
+
+
+
+
+
+//DUMMY
+void printList(List* pList){
+    Node* temp = pList->head;
+    while(temp != NULL){
+        printf("%d ", *(int*)(temp)->item);
+        temp = temp->next;
+    }
+    printf("\n");
+}

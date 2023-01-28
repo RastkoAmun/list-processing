@@ -16,6 +16,10 @@ struct Node_s {
     int indexInArray;
     Node* next;
     Node* prev;
+    //These 2 pointers will only be used by currentFreeNode pointer in list.c
+    //because I'm using linked list of pointers to keep track of free nodes in the array
+    //I need these 2 additional pointers, because pointers next and prev are already 
+    //reserved for connecting nodes of the list itself
     Node* nextFree;
     Node* prevFree;
 };
