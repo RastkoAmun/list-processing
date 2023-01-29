@@ -14,83 +14,62 @@ int main(){
 
     //MAIN TEST 1
     {
-        // // List* list4 = List_create();
-        // // List* list5 = List_create();
-        // printf("%p\n", list);
-        // printf("%p\n", list2);
-        // printf("%p\n", list3);
-        // // printf("%p\n", list4);
-        // // printf("%p\n", list5);
+        int a1 = 1, a2 = 2, a3 = 3, a4 = 4, a5 = 5, a6 = 6, a7 = 7, a8 = 8, a9 = 9;
+        int b1 = 10, b2 = 20, b3 = 30, b4 = 40, b5 = 50;
+        int c1 = 100, c2 = 200, c3 = 300, c4 = 400;
+        List_insert_before(list, &a1);
+        List_insert_before(list, &a2);
+        List_append(list, &a3);
+        List_prepend(list2, &b1);
+        List_append(list2, &b2);
+        List_first(list);
+        List_next(list);
+        List_remove(list);
 
-        // printf("List head: %p\n", list->head);
+        List_insert_after(list, &a4);
+        List_insert_after(list3, &c1);
+        List_insert_before(list3, &c2);
 
-        // int a1 = 1;
-        // int a2 = 2;
-        // int a3 = 3;
-        // // int a4 = 4;
-        // List_append(list, &a1);
-        // List_append(list, &a2);
-        // List_prepend(list, &a3);
-        // // List_append(list, &a4);
-        // printList(list);
+        List_last(list3);
+        List_prev(list3);
+        List_insert_after(list3, &c3);
+        List_insert_before(list, &a5);
+        List_insert_before(list2, &b3);
 
-        // int b1 = 101;
-        // int b2 = 102;
-        // // int b3 = 103;
-        // List_append(list2, &b1);
-        // List_append(list2, &b2);
-        // // List_append(list2, &b3);
-        // printList(list2);
 
-        // int a5 = 5;
-        // int a6 = 6;
-        // List_prepend(list, &a5);
-        // List_append(list, &a6);
-        // printList(list);
 
-        // int c1 = 1001;
-        // // int c2 = 1002;
-        // // int c3 = 1003;
-        // // int c4 = 1004;
-        // List_append(list3, &c1);
-        // // List_append(list3, &c2);
-        // // List_append(list3, &c3);
+        List_remove(list);
+
+        List_prev(list);
+        List_remove(list);
+
+        List_remove(list2);
+        List_first(list3);
+        List_remove(list3);
+
+        
+
+        List_append(list, &a6);
+        List_append(list, &a7);
+        // List_insert_after(list3, &c4);
+        // List_prepend(list2, &b5);
         // // List_append(list3, &c4);
-        // printList(list3);
 
-        // printf("Number of nodes in list 1: %d \n", List_count(list));
-        // printf("Number of nodes in list 2: %d \n", List_count(list2));
-        // printf("Number of nodes in list 3: %d \n", List_count(list3));
-        // // void* removedItem1 = List_trim(list);
-        // // void* removedItem2 = List_trim(list);
-        // // printf("Removed item: %d and it's address is: %p\n", *(int*)removedItem1, removedItem1);
-        // // printf("Removed item: %d and it's address is: %p\n", *(int*)removedItem2, removedItem2);
-        // printf("Removed item:  and it's address is: %p\n", List_trim(list));
-        // printf("Removed item:  and it's address is: %p\n", List_trim(list));
-        // printf("Removed item:  and it's address is: %p\n", List_trim(list));
-        // printf("Removed item:  and it's address is: %p\n", List_trim(list));
-        // // printf("Current of the list: %p \n", );
+        // Node* temp = list2->head;
+        // while(temp != NULL){
+        //     printf("Addr: %p\n", temp);
+        //     temp = temp->next;
+        // }
+        // printf("\n");
 
-        // int c2 = 1002;
-        // List_append(list3, &c2);
-        // printf("Tail of newly added is %p\n", List_last(list3));
 
-        // int b3 = 103;
-        // int b4 = 104;
-        // List_append(list, &b3);
-        // List_append(list, &b4);
-
-        // int a7 = 7;
-        // List_append(list, &a7);
-
-        // int b5 = 105;
-        // printf("IS it added?: %d\n", List_prepend(list2, &b5));
-        // printf("IS it added?: %d\n", List_prepend(list2, &b5));
-        // printf("IS it added?: %d\n", List_prepend(list2, &b5));
-
-        // printList(list);
-        // printList(list2);
-        // printList(list3);
+        // List_insert_after(list3, c1);
+        printf("Number of items in the list: %d\n", List_count(list));
+        printf("Number of items in the list: %d\n", List_count(list2));
+        printf("Number of items in the list: %d\n", List_count(list3));
+        printList(list);
+        printList(list2);
+        printList(list3);
     }
 
     //MAIN TEST 2 (prepend, append, remove)
@@ -241,35 +220,93 @@ int main(){
     
     //Testing List_remove method
     {
-        int r1 = 1;
-        int r2 = 2;
-        int r3 = 3;
-        int r4 = 4;
-        int r5 = 5;
-        int r6 = 6;
-        int r7 = 7;
-        int r8 = 8;
-        int r9 = 9;
-        int r10 = 10;
-        int r11 = 11;
-        int r12 = 12;
-        List_append(list, &r1);
-        List_append(list, &r2);
-        List_append(list, &r3);
-        List_next(list);
-        List_remove(list);
-        List_append(list, &r4);
-        List_first(list);
-        List_next(list);
-        List_insert_after(list, &r5);
-        List_remove(list);
-        List_append(list, &r6);
-        List_append(list, &r7);
-        List_append(list, &r8);
-        printList(list);
+        // int r1 = 1;
+        // int r2 = 2;
+        // int r3 = 3;
+        // int r4 = 4;
+        // int r5 = 5;
+        // int r6 = 6;
+        // int r7 = 7;
+        // int r8 = 8;
+        // int r9 = 9;
+        // int r10 = 10;
+        // int r11 = 11;
+        // int r12 = 12;
+        // List_append(list, &r1);
+        // List_append(list, &r2);
+        // List_append(list, &r3);
+        // List_next(list);
+        // List_remove(list);
+        // List_append(list, &r4);
+        // List_first(list);
+        // List_next(list);
+        // List_insert_after(list, &r5);
+        // List_remove(list);
+        // List_append(list, &r6);
+        // List_append(list, &r7);
+        // List_append(list, &r8);
+        // printList(list);
     }
 
+    //Testing all methods for inserting and removing along with
+    //testing if free node tracking system is implemented correctly
+    {
+        // int k1 = 1;
+        // int k2 = 2;
+        // int k3 = 3;
+        // int k4 = 4;
+        // int k5 = 5;
+        // int k6 = 6;
+        // int k7 = 7;
+        // int k8 = 8;
+        // int k9 = 9;
+        // int k10 = 10;
+        // int k11 = 11;
+        // int k12 = 12;
+        // int k13 = 13;
+        // int k14 = 14;
+        // List_append(list2, &k1);
+        // List_append(list2, &k2);
+        // List_append(list2, &k3);
+        // List_append(list2, &k4);
+        // List_append(list2, &k5);
+        // List_append(list2, &k6);
+        // List_append(list2, &k7);
+        // List_append(list2, &k8);
+        // List_append(list2, &k9);
+        // List_append(list2, &k10);
+        // List_remove(list2);
+        // List_append(list2, &k11);
+        // List_first(list2);
+        // List_remove(list2);
+        // List_prepend(list2, &k12);
+        // List_first(list2);
+        // List_next(list2);
+        // List_next(list2);
+        // List_next(list2);
+        // List_next(list2);
+        // List_remove(list2);
+        // List_next(list2);
+        // List_remove(list2);
+        // List_insert_after(list2, &k13);
+        // List_append(list2, &k14);
+        // // List_append(list2, &k13);
+        // // List_append(list2, &k13);
+        // // printf("%d \n", List_append(list2, &k12));
+        // // List_append(list2, &k14);
+        // // List_append(list2, &k15);
+        // printf("Number of items in the list: %d\n\n", List_count(list2));
+        // printList(list2);
 
+        // printf("\nADDR: %p\n\n", list2->tail);
+
+        // Node* temp = list2->head;
+        // while(temp != NULL){
+        //     printf("Addr: %p\n", temp);
+        //     temp = temp->next;
+        // }
+        // printf("\n");
+    }
 
     // List* list5 = List_create();
     // List* list6 = List_create();
