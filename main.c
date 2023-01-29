@@ -2,12 +2,6 @@
 #include <assert.h>
 #include "list.h"
 
-// #define LIST_MAX_NUM_HEADS 10
-// #define LIST_MAX_NUM_NODES 100
-
-// static int lists[LIST_MAX_NUM_HEADS];
-// static int nodes[LIST_MAX_NUM_NODES];
-
 int main(){
     // printf("arr[0] address = %p\n", &lists[0]);
     // printf("arr[9] address = %p\n", &lists[LIST_MAX_NUM_HEADS - 1]);
@@ -175,25 +169,25 @@ int main(){
         
         //TESTING BOTH METHODS TOGETHER
         {
-            List_insert_before(list4, &n1);
-            List_insert_after(list4, &n2);
-            List_insert_before(list4, &n3);
-            List_insert_before(list4, &n4);
-            List_next(list4);
-            List_next(list4);
-            List_prev(list4);
-            List_insert_after(list4, &n5);
-            List_last(list4);
-            List_insert_before(list4, &n6);
-            List_last(list4);
-            List_insert_after(list4, &n7);
-            List_last(list4);
-            List_next(list4);
-            List_next(list4);
-            List_insert_after(list4, &n8);
-            List_first(list4);
-            List_prev(list4);
-            List_insert_before(list4, &n9);
+            // List_insert_before(list4, &n1);
+            // List_insert_after(list4, &n2);
+            // List_insert_before(list4, &n3);
+            // List_insert_before(list4, &n4);
+            // List_next(list4);
+            // List_next(list4);
+            // List_prev(list4);
+            // List_insert_after(list4, &n5);
+            // List_last(list4);
+            // List_insert_before(list4, &n6);
+            // List_last(list4);
+            // List_insert_after(list4, &n7);
+            // List_last(list4);
+            // List_next(list4);
+            // List_next(list4);
+            // List_insert_after(list4, &n8);
+            // List_first(list4);
+            // List_prev(list4);
+            // List_insert_before(list4, &n9);
         }
 
         printList(list4);
@@ -245,7 +239,35 @@ int main(){
         // }
     }
     
-
+    //Testing List_remove method
+    {
+        int r1 = 1;
+        int r2 = 2;
+        int r3 = 3;
+        int r4 = 4;
+        int r5 = 5;
+        int r6 = 6;
+        int r7 = 7;
+        int r8 = 8;
+        int r9 = 9;
+        int r10 = 10;
+        int r11 = 11;
+        int r12 = 12;
+        List_append(list, &r1);
+        List_append(list, &r2);
+        List_append(list, &r3);
+        List_next(list);
+        List_remove(list);
+        List_append(list, &r4);
+        List_first(list);
+        List_next(list);
+        List_insert_after(list, &r5);
+        List_remove(list);
+        List_append(list, &r6);
+        List_append(list, &r7);
+        List_append(list, &r8);
+        printList(list);
+    }
 
 
 

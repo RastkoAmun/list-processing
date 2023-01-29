@@ -35,6 +35,9 @@ struct List_s{
     Node* head;
     Node* tail;
     Node* current;
+
+    List* nextFree;
+    List* prevFree;
     int numberOfItems;
     int indexInArray;
 };
