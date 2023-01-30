@@ -2,6 +2,10 @@
 #include <assert.h>
 #include "list.h"
 
+void freeItem(void* currItem){
+    currItem = NULL;
+}
+
 int main(){
     // printf("arr[0] address = %p\n", &lists[0]);
     // printf("arr[9] address = %p\n", &lists[LIST_MAX_NUM_HEADS - 1]);
@@ -11,6 +15,28 @@ int main(){
     List* list = List_create();
     List* list2 = List_create();
     List* list3 = List_create();
+    List* list4 = List_create();
+    // List* list5 = List_create();
+    printf("Addr: %p\n", list);
+    printf("Addr: %p\n", list2);
+    printf("Addr: %p\n", list3);
+    printf("Addr: %p\n", list4);
+    // printf("Addr: %p\n", list5);
+
+    //Mini-test
+    {   
+        // int a1 = 1, a2 = 2, a3 = 3, a4 = 4, a5 = 5, a6 = 6, a7 = 7, a8 = 8, a9 = 9;
+        // List_append(list, &a1);
+        // List_append(list, &a2);
+        // List_prev(list);
+        // List_insert_before(list, &a3);
+        // printf("curr: %d\n", *(int*)list->tail->item);
+        // printf("prev1: %d\n", *(int*)list->tail->prev->item);
+        // printf("prev2: %d\n", *(int*)list->tail->prev->prev->item);
+        // // printf("Head: %d", list->)
+        // // printf("Head: %d", list->)
+    }
+
 
     //MAIN TEST 1
     {
@@ -25,43 +51,24 @@ int main(){
         List_first(list);
         List_next(list);
         List_remove(list);
-
         List_insert_after(list, &a4);
         List_insert_after(list3, &c1);
         List_insert_before(list3, &c2);
-
         List_last(list3);
         List_prev(list3);
         List_insert_after(list3, &c3);
         List_insert_before(list, &a5);
         List_insert_before(list2, &b3);
-
-
-
         List_remove(list);
-
         List_prev(list);
         List_remove(list);
-
         List_remove(list2);
         List_first(list3);
         List_remove(list3);
-
-        
-
         List_append(list, &a6);
         List_append(list, &a7);
-        // List_insert_after(list3, &c4);
-        // List_prepend(list2, &b5);
-        // // List_append(list3, &c4);
-
-        // Node* temp = list2->head;
-        // while(temp != NULL){
-        //     printf("Addr: %p\n", temp);
-        //     temp = temp->next;
-        // }
-        // printf("\n");
-
+        List_insert_after(list3, &c4);
+        List_prepend(list2, &b5);
 
         // List_insert_after(list3, c1);
         printf("Number of items in the list: %d\n", List_count(list));
@@ -70,6 +77,37 @@ int main(){
         printList(list);
         printList(list2);
         printList(list3);
+
+        printf("Head of list is: %d\n", *(int*)list->head->item);
+        printf("Tail of list is: %d\n", *(int*)list->tail->item);
+        printf("Head of list3 is: %d\n", *(int*)list3->head->item);
+        printf("Tail of list3 is: %d\n", *(int*)list3->tail->item);
+        List_concat(list, list3);
+        // printf("Head of list is: %d\n", *(int*)list->head->item);
+        // printf("Head of list is: %d\n", *(int*)list->head->next->item);
+        // printf("Head of list is: %d\n", *(int*)list->head->next->next->item);
+        // printf("Head of list is: %d\n", *(int*)list->head->next->next->next->item);
+        // printf("Head of list is: %d\n", *(int*)list->head->next->next->next->next->item);
+        // printf("Head of list is: %d\n", *(int*)list->head->next->next->next->next->next->item);
+        printf("Tail of list is: %d\n", *(int*)list->tail->item);
+        printList(list);
+        
+        List* list6 = List_create();
+        printf("Addr: %p\n", list6);
+        printf("Number of items in the list: %d\n", List_count(list));
+        printf("Number of items in the list: %d\n", List_count(list2));
+        printf("Number of items in the list: %d\n", List_count(list3));
+        printf("Number of items in the list: %d\n", List_count(list4));
+        printf("Tail 2: %p\n", list->tail);
+        List_free(list, freeItem);
+        List* list7 = List_create();
+        printf("Addr: %p\n", list7);
+        List_free(list2, freeItem);
+        printf("Number of items in the list: %d\n", List_count(list));
+        printf("Number of items in the list: %d\n", List_count(list2));
+        printf("Addr: %p\n", list);
+        printf("Addr: %p\n", list2);
+        // List_free(list);
     }
 
     //MAIN TEST 2 (prepend, append, remove)
@@ -85,16 +123,16 @@ int main(){
 
     //Testing List_insert_after and testing List_insert_before
     {
-        List* list4 = List_create();
-        int n1 = 10;
-        int n2 = 20;
-        int n3 = 30;
-        int n4 = 40;
-        int n5 = 50;
-        int n6 = 60;
-        int n7 = 70;
-        int n8 = 80;
-        int n9 = 90;
+        // List* list4 = List_create();
+        // int n1 = 10;
+        // int n2 = 20;
+        // int n3 = 30;
+        // int n4 = 40;
+        // int n5 = 50;
+        // int n6 = 60;
+        // int n7 = 70;
+        // int n8 = 80;
+        // int n9 = 90;
 
         //TESTING ONLY List_insert_after
         {
@@ -169,7 +207,7 @@ int main(){
             // List_insert_before(list4, &n9);
         }
 
-        printList(list4);
+        // printList(list4);
     }
 
     //Testing functions for moving pointers
