@@ -6,11 +6,16 @@ static List lists[LIST_MAX_NUM_HEADS];
 static Node nodes[LIST_MAX_NUM_NODES];
 
 //FOR LIST HEADS
+//This is the main pointer for keeping the track of free list heads
 static List* currentFreeHead = &lists[0];
+//This is helper pointer that will help me keep address of the highest index in array of list heads
 static List* highestHead = &lists[0];
+//Integer to keep track how many list heads are busy
 static int numberOfListHeads = 0;
+
+
 //FOR NODES
-//This is the main pointer for keeping the track
+//This is the main pointer for keeping the track of free nodes
 static Node* currentFreeNode = &nodes[0];
 //This is helper pointer that will help me keep address of the highest index in array of nodes
 static Node* highestNode = &nodes[0];
@@ -18,8 +23,17 @@ static Node* highestNode = &nodes[0];
 static int numberOfListNodes = 0;
 
 //HELPER FUNCTIONS
-//Used when adding item to the list
+//Helper functions for my implementation are keeping track of nodes in reverse
+//When we remove a node, the Next_free_node will connect currentFreeNode with the one we just deleted
+//This way we will have connected free nodes
+//When we add a node, the Prev_free_node will set the currentFreeNode to null (so
+//it won't be connected among free nodes anymore)
+//and the prev node will become currentFreeNode
 void Prev_free_node(){
+    //if currentFreeNode is not connected to any nodes, that will mean the next free
+    //node will be the one at the next index in the array
+    //if currentFreeNode is connected to other nodes, then we will use the last connected nodes
+    //make it busy and reverse back to prev node to set it as a currentFreeNode
     if(currentFreeNode == highestNode){
         currentFreeNode = currentFreeNode + 1;
         highestNode = currentFreeNode;
@@ -33,13 +47,13 @@ void Prev_free_node(){
     }
 }
 
-//Used when removing item from the list
 void Next_free_node(Node* removedNode){
     currentFreeNode->nextFree = removedNode;
     removedNode->prevFree = currentFreeNode;
     currentFreeNode = removedNode;
 }
 
+//SAME FUNCTIONALITY AS DESCRIBED BELOW ARE IMPLEMENTED FOR KEEPING TRACK OF FREE HEADS
 void Prev_free_list_head(){
     if(currentFreeHead == highestHead){
         currentFreeHead = currentFreeHead + 1;
@@ -53,7 +67,6 @@ void Prev_free_list_head(){
     }
 }
 
-//Used when removing item from the list
 void Next_free_list_head(List* removedHead){
     currentFreeHead->nextFree = removedHead;
     removedHead->prevFree = currentFreeHead;
@@ -86,14 +99,10 @@ List* List_create(){
         currentFreeHead->head = NULL;
         currentFreeHead->tail = NULL;
         currentFreeHead->current = NULL;
-        // currentFreeHead->indexInArray = numberOfListHeads;
         currentFreeHead->numberOfItems = 0;
         numberOfListHeads++;
-        // printf("Current address: %p\n", currentFreeHead);
-        // currentFreeHead = &lists[numberOfListHeads];
         List* temp = currentFreeHead;
         Prev_free_list_head();
-        // printf("Current address: %p\n", currentFreeHead);
         return temp;
     }
 }
@@ -106,7 +115,9 @@ int List_count(List* pList){
 // Returns a pointer to the first item in pList and makes the first item the current item.
 // Returns NULL and sets current item to NULL if list is empty.
 void* List_first(List* pList){
-    if(pList->head == NULL){
+    if(pList == NULL){
+        return NULL;
+    }else if(pList->head == NULL){
         pList->current = NULL;
         return NULL;
     }else{
@@ -118,7 +129,9 @@ void* List_first(List* pList){
 // Returns a pointer to the last item in pList and makes the last item the current item.
 // Returns NULL and sets current item to NULL if list is empty.
 void* List_last(List* pList){
-    if(pList->head == NULL){
+    if(pList == NULL){
+        return NULL;
+    }else if(pList->head == NULL){
         pList->current = NULL;
         return NULL;
     }else{
@@ -131,7 +144,9 @@ void* List_last(List* pList){
 // If this operation advances the current item beyond the end of the pList, a NULL pointer 
 // is returned and the current item is set to be beyond end of pList.
 void* List_next(List* pList){
-    if(pList->current == (void*)LIST_OOB_END){
+    if(pList->current == NULL){
+        return NULL;
+    }else if(pList->current == (void*)LIST_OOB_END){
         pList->current = (void*)LIST_OOB_END;
         return NULL;
     }else if(pList->current->next == NULL){
@@ -147,7 +162,9 @@ void* List_next(List* pList){
 // If this operation backs up the current item beyond the start of the pList, a NULL pointer 
 // is returned and the current item is set to be before the start of pList.
 void* List_prev(List* pList){
-    if(pList->current == (void*)LIST_OOB_START){
+    if(pList->current == NULL){
+        return NULL;
+    }else if(pList->current == (void*)LIST_OOB_START){
         pList->current = (void*)LIST_OOB_START;
         return NULL;
     }else if(pList->current->prev == NULL){
@@ -161,7 +178,11 @@ void* List_prev(List* pList){
 
 // Returns a pointer to the current item in pList.
 void* List_curr(List* pList){
-    return pList->current->item;
+    if(pList->current == NULL){
+        return NULL;
+    }else{
+        return pList->current->item;
+    }
 }
 
 // Adds the new item to pList directly after the current item, and makes item the current item. 
@@ -170,6 +191,8 @@ void* List_curr(List* pList){
 // Returns 0 on success, -1 on failure.
 int List_insert_after(List* pList, void* pItem){
     if(numberOfListNodes == LIST_MAX_NUM_NODES){
+        return -1;
+    }else if(pList == NULL){
         return -1;
     }else{
         if(pList->current == pList->tail){
@@ -202,6 +225,8 @@ int List_insert_after(List* pList, void* pItem){
 int List_insert_before(List* pList, void* pItem){
     if(numberOfListNodes == LIST_MAX_NUM_NODES){
         return -1;
+    }else if(pList == NULL){
+        return -1;
     }else{
         if(pList->current == pList->head){
             return List_prepend(pList, pItem);
@@ -210,14 +235,6 @@ int List_insert_before(List* pList, void* pItem){
         }else if(pList->current == (void*)LIST_OOB_START){
             return List_prepend(pList, pItem);
         }else{
-            // Node* temp = pList->current->prev;
-            // pList->current->prev = currentFreeNode;
-            // currentFreeNode->next = pList->current;
-            // currentFreeNode->prev = temp;
-            // temp->next = currentFreeNode;
-            // pList->current = currentFreeNode;
-            // pList->current->item = pItem;
-
             Node* temp = pList->current->prev;
             pList->current->prev = currentFreeNode;
             currentFreeNode->next = pList->current;
@@ -234,11 +251,12 @@ int List_insert_before(List* pList, void* pItem){
     }
 }
 
-
 // Adds item to the end of pList, and makes the new item the current one. 
 // Returns 0 on success, -1 on failure.
 int List_append(List* pList, void* pItem){
     if(numberOfListNodes == LIST_MAX_NUM_NODES){
+        return -1;
+    }else if(pList == NULL){
         return -1;
     }else{
         if(pList->head == NULL){
@@ -272,6 +290,8 @@ int List_append(List* pList, void* pItem){
 int List_prepend(List* pList, void* pItem){
     if(numberOfListNodes == LIST_MAX_NUM_NODES){
         return -1;
+    }else if(pList == NULL){
+        return -1;
     }else{
         if(pList->head == NULL){
             pList->head = currentFreeNode;
@@ -285,7 +305,7 @@ int List_prepend(List* pList, void* pItem){
             Prev_free_node();
         }else{
             pList->head->prev = currentFreeNode;
-            pList->head->prev->next = pList->head;
+            currentFreeNode->next = pList->head;
             pList->head = currentFreeNode;
             pList->current = currentFreeNode;
             pList->head->item = pItem;
@@ -307,16 +327,17 @@ void* List_remove(List* pList){
     }else{
         if(pList->current == pList->tail){
             return List_trim(pList);
+        }else if(pList->numberOfItems == 1){
+            return List_trim(pList);
         }else if(pList->current == pList->head){
             Node* temp = pList->head;
             pList->head = pList->head->next;
             pList->current = pList->head;
-            pList->head->prev = NULL;
+            // pList->head->prev = NULL;
             void* currentItem = temp->item;
-            temp->next = NULL;
+            // temp->next = NULL;
             temp->item = NULL;
             
-            currentFreeNode->next = pList->current;
             Next_free_node(temp);
             pList->numberOfItems--;
             numberOfListNodes--;
@@ -326,8 +347,8 @@ void* List_remove(List* pList){
             pList->current = temp->next;
             pList->current->prev = temp->prev;
             temp->prev->next = pList->current;
-            temp->prev = NULL;
-            temp->next = NULL;
+            // temp->prev = NULL;
+            // temp->next = NULL;
             Next_free_node(temp);
             pList->numberOfItems--;
             numberOfListNodes--;
@@ -339,13 +360,10 @@ void* List_remove(List* pList){
 // Return last item and take it out of pList. Make the new last item the current one.
 // Return NULL if pList is initially empty.
 void* List_trim(List* pList){
-    // printf("Number of items: %d\n", List_count(pList));
-    if(pList->head == NULL){
+    if(pList->tail == NULL){
         return NULL;
-    }
-    
-    else if(pList->numberOfItems == 1){
-        Node* temp = pList->head;
+    }else if(pList->numberOfItems == 1){
+        Node* temp = pList->tail;
         pList->tail = NULL;
         pList->current = NULL;
         pList->head = NULL;
@@ -353,21 +371,19 @@ void* List_trim(List* pList){
         pList->numberOfItems--;
         numberOfListNodes--;
         return temp->item;
-    }
-    
-    else{
+    }else{
         Node* temp = pList->tail;
         pList->current = temp->prev;
-        // printf("Current address of tail: %p \n", temp);
         void* tempItem = temp->item;
-        printf("Number of items: %d\n", List_count(pList));
-        printf("Temp->prev : %p \n", temp->prev);
+        // printf("Number of items in the list: %d\n", List_count(pList));
+        // printf("ADDRgf: %p\n", temp->prev);
+        // printf("ADDRgf: %p\n", temp->prev->next);
         pList->tail = temp->prev;
-        // pList->tail->next = NULL;
-        // temp->prev = NULL;
+        // temp->prev->next = NULL;
+        
+        temp->prev = NULL;
 
         Next_free_node(temp);
-
         pList->numberOfItems--;
         numberOfListNodes--;
         return tempItem;
@@ -385,18 +401,16 @@ void List_concat(List* pList1, List* pList2){
         pList1->tail->next = pList2->head;
         pList2->head->prev = pList1->tail;
         pList1->tail = pList2->tail;
-        // printf("Tail 1: %p\n", pList1->tail);
-        pList1->current = pList2->tail;
+        pList1->current = pList1->tail;
+        pList1->numberOfItems = pList1->numberOfItems + pList2->numberOfItems;
+        List* temp = pList2;
         pList2->current = NULL;
         pList2->head = NULL;
         pList2->tail = NULL;
-        pList1->numberOfItems = pList1->numberOfItems + pList2->numberOfItems;
+        pList1->tail->next = NULL;
         pList2->numberOfItems = 0;
         numberOfListHeads--;
-        List* temp = pList2;
-        // printf("Addr444: %p\n", pList2);
         Next_free_list_head(temp);
-        // setNull(pList2);
     }
 }
 
@@ -409,7 +423,7 @@ void List_free(List* pList, FREE_FN pItemFreeFn){
     // List* removedHead = pList->head;
     for(int i = pList->numberOfItems; i > 0; i--){
         void* itemToDelete = List_trim(pList);
-        // (*pItemFreeFn)(itemToDelete);
+        (*pItemFreeFn)(itemToDelete);
     }
     Next_free_list_head(pList);
     numberOfListHeads--;
@@ -428,4 +442,6 @@ void List_free(List* pList, FREE_FN pItemFreeFn){
 // If the current pointer is before the start of the pList, then start searching from
 // the first node in the list (if any).
 typedef bool (*COMPARATOR_FN)(void* pItem, void* pComparisonArg);
-void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg);
+void* List_search(List* pList, COMPARATOR_FN pComparator, void* pComparisonArg){
+    return 0;
+}
